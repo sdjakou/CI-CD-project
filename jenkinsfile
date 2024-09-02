@@ -4,17 +4,35 @@ pipeline {
     tools {
         maven 'CI-CD-project'
     }
+
+    environment {
+        SONAR_AUTH_TOKEN = credentials('CI-CD-project') // Corrected usage of environment variable
+    }
     
-    stages{
-        stage('cloning'){
-            steps{
+    stages {
+        stage('Cloning') {
+            steps {
                 git branch: 'main', changelog: false, poll: false, url: 'https://github.com/Angecalais97/CI-CD-project'
             }
         }
 
-        stage('maven package'){
-            steps{
+        stage('Maven Package') {
+            steps {
                 sh 'mvn clean package -Dmaven.repo.local=/tmp/target'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('CI-CD-project') { // Ensure the correct installation is referenced
+                    sh '''
+                        mvn sonar:sonar \
+                        -Dsonar.projectKey=CI-CD-project \
+                        -Dsonar.projectName="CI-CD Project" \  // Added the Sonar project name
+                        -Dsonar.host.url=https://sonarqube.devopseasylearning.uk/ \
+                        -Dsonar.login=$SONAR_AUTH_TOKEN
+                    '''
+                }
             }
         }
     }
