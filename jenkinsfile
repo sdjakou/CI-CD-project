@@ -1,9 +1,20 @@
 pipeline {
     agent any
+    
+    tools {
+        maven 'CI-CD-project'
+    }
+    
     stages{
         stage('cloning'){
             steps{
                 git branch: 'main', changelog: false, poll: false, url: 'https://github.com/Angecalais97/CI-CD-project'
+            }
+        }
+
+        stage('maven package'){
+            steps{
+                sh 'mvn clean package'
             }
         }
     }
