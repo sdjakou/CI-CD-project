@@ -24,17 +24,14 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('CI-CD-project') { // Ensure the correct installation is referenced
-                    sh '''
-                        mkdir -p /home/automation/.m2/repository && sudo chmod -R 755 /home/automation/.m2/repository
-                        mvn sonar:sonar \
-                            -Dsonar.projectKey=CI-CD-project \
-                            -Dsonar.projectName=CI-CD-Project \
-                            -Dsonar.host.url=https://sonarqube.devopseasylearning.uk \
-                            -Dsonar.login=$SONAR_AUTH_TOKEN
-                            -Dmaven.repo.local=/tmp/maven-repo
-                    '''
-                }
+                withSonarQubeEnv('CI-CD-project') {  // SonarQube scanner name in Jenkins configuration
+          sh '''
+          mvn sonar:sonar \
+            -Dsonar.projectKey=CI-CD-project \
+            -Dsonar.host.url=https://sonarqube.devopseasylearning.uk \
+            -Dsonar.login=$SONARQUBE_TOKEN
+          '''
+        }
             }
         }
     }
