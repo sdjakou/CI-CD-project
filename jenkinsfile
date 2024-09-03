@@ -23,24 +23,16 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
-            environment {
-                CI = 'true'
-                scannerHome = '/opt/sonar-scanner'
-            }
             steps {
-                withSonarQubeEnv('CI-CD-project') {
-                    script {
-                        // Check if SonarQube scanner exists
-                        if (fileExists("${scannerHome}/bin/sonar-scanner")) {
-                            sh '''
-                                "${scannerHome}/bin/sonar-scanner" \
-                                  -Dsonar.projectKey=CI-CD-project \
-                                  -Dsonar.host.url=https://sonarqube.devopseasylearning.uk \
-                                  -Dsonar.login=$SONAR_AUTH_TOKEN
-                            '''
-                        } else {
-                            error "SonarQube scanner not found at ${scannerHome}"
-                        }
+                script {
+                    docker.image('sonarsource/sonar-scanner-cli:latest').inside {
+                        sh '''
+                            sonar-scanner \
+                                -Dsonar.projectKey=CI-CD-project \
+                                -Dsonar.projectName=CI-CD-Project \
+                                -Dsonar.host.url=https://sonarqube.devopseasylearning.uk \
+                                -Dsonar.login=$SONAR_AUTH_TOKEN
+                        '''
                     }
                 }
             }
