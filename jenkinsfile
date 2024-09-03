@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        SONAR_AUTH_TOKEN = credentials('CI-CD-project') // Corrected usage of environment variable
+        SONAR_AUTH_TOKEN = credentials('CI-CD-project')
     }
     
     stages {
@@ -26,13 +26,9 @@ pipeline {
             steps {
                 script {
                     docker.image('sonarsource/sonar-scanner-cli:latest').inside {
-                        sh '''
-                            sonar-scanner -X \
-                                -Dsonar.projectKey=CI-CD-project \
-                                -Dsonar.projectName=CI-CD-Project \
-                                -Dsonar.host.url=https://sonarqube.devopseasylearning.uk \
-                                -Dsonar.login=$SONAR_AUTH_TOKEN
-                        '''
+                        withEnv(['SONAR_SCANNER_OPTS=-Dsonar.projectKey=CI-CD-project -Dsonar.projectName=CI-CD-Project -Dsonar.host.url=https://sonarqube.devopseasylearning.uk -Dsonar.login=$SONAR_AUTH_TOKEN']) {
+                            sh 'sonar-scanner -X'
+                        }
                     }
                 }
             }
