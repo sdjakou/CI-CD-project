@@ -1,12 +1,8 @@
 pipeline {
     agent any
     
-    tools {
-        maven 'CI-CD-project'
-    }
-
     environment {
-        SONAR_AUTH_TOKEN = credentials('CI-CD-project')
+        SONAR_SCANNER_OPTS = '-Dsonar.projectKey=CI-CD-project -Dsonar.projectName=CI-CD-Project -Dsonar.host.url=https://sonarqube.devopseasylearning.uk -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.cache.directory=/tmp/.sonar'
     }
     
     stages {
@@ -26,9 +22,7 @@ pipeline {
             steps {
                 script {
                     docker.image('sonarsource/sonar-scanner-cli:latest').inside {
-                        withEnv(['SONAR_SCANNER_OPTS=-Dsonar.projectKey=CI-CD-project -Dsonar.projectName=CI-CD-Project -Dsonar.host.url=https://sonarqube.devopseasylearning.uk -Dsonar.login=$SONAR_AUTH_TOKEN']) {
-                            sh 'sonar-scanner -X'
-                        }
+                        sh 'sonar-scanner -X'
                     }
                 }
             }
