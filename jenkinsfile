@@ -31,6 +31,7 @@ pipeline {
                             -Dsonar.projectName=CI-CD-Project \
                             -Dsonar.host.url=https://sonarqube.devopseasylearning.uk \
                             -Dsonar.login=$SONAR_AUTH_TOKEN
+                            -Dmaven.repo.local=/tmp/maven-repo
                     '''
                 }
             }
