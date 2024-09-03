@@ -28,8 +28,8 @@ pipeline {
                     sh '''
                         mvn sonar:sonar \
                             -Dsonar.projectKey=CI-CD-project \
-                            -Dsonar.projectName=CI-CD Project \  
-                            -Dsonar.host.url=https://sonarqube.devopseasylearning.uk/ \
+                            -Dsonar.projectName=CI-CD-Project \  
+                            -Dsonar.host.url=https://sonarqube.devopseasylearning.uk \
                             -Dsonar.login=$SONAR_AUTH_TOKEN
                     '''
                 }
