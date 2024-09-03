@@ -25,13 +25,13 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('CI-CD-project') {  // SonarQube scanner name in Jenkins configuration
-          sh '''
-          mvn sonar:sonar \
-            -Dsonar.projectKey=CI-CD-project \
-            -Dsonar.host.url=https://sonarqube.devopseasylearning.uk \
-            -Dsonar.login=$SONARQUBE_TOKEN
-          '''
-        }
+                    sh '''
+                    mvn sonar:sonar \
+                      -Dsonar.projectKey=CI-CD-project \
+                      -Dsonar.host.url=https://sonarqube.devopseasylearning.uk \
+                      -Dsonar.login=$SONARQUBE_TOKEN
+                    '''
+                }
             }
         }
     }
