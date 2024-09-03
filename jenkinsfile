@@ -27,7 +27,7 @@ pipeline {
                 script {
                     docker.image('sonarsource/sonar-scanner-cli:latest').inside {
                         sh '''
-                            sonar-scanner \
+                            sonar-scanner -X \
                                 -Dsonar.projectKey=CI-CD-project \
                                 -Dsonar.projectName=CI-CD-Project \
                                 -Dsonar.host.url=https://sonarqube.devopseasylearning.uk \
