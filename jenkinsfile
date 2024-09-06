@@ -21,7 +21,7 @@ pipeline {
             }
             steps {
                 // Running Maven unit tests
-                sh 'mvn clean test'
+                sh 'mvn clean package'
             }
         }
     } // Correctly closing the 'stages' block
