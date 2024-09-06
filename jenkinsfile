@@ -4,11 +4,27 @@ pipeline {
     stages {
         stage('Cloning Repo') {
             steps {
-                // Use the `git` step to checkout the repository
+                // Cloning the repository
                 git branch: 'main', 
                     credentialsId: 'git-key-steph', 
                     url: 'https://github.com/sdjakou/CI-CD-project'
             }
         }
+
+        stage('Maven Unit Test') {
+            agent {
+                // Using a Docker image with Maven installed
+                docker {
+                    image 'maven:3.8.7-openjdk-17'
+                    args '-v /root/.m2:/root/.m2' // Mounting the Maven local repository for caching
+                }
+            }
+            steps {
+                // Running Maven unit tests
+                sh 'mvn clean test'
+            }
+        }
     }
+}
+
 }
