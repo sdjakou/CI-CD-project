@@ -15,13 +15,13 @@ pipeline {
             agent {
                 // Using a Docker image with Maven installed
                 docker {
-                    image 'maven:3.8.7-openjdk-17'
+                    image 'maven:3.8.4-openjdk-11'
                     args '-v /root/.m2:/root/.m2' // Mounting the Maven local repository for caching
                 }
             }
             steps {
                 // Running Maven unit tests
-                sh 'mvn clean test'
+                sh 'mvn clean package'
             }
         }
     }
