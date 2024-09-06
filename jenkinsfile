@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Cloning Repo') {
             steps {
-                // Cloning the repository
+                // Cloning the repository from the specified branch and URL using credentials
                 git branch: 'main', 
                     credentialsId: 'git-key-steph', 
                     url: 'https://github.com/sdjakou/CI-CD-project'
@@ -13,16 +13,42 @@ pipeline {
 
         stage('Maven Unit Test') {
             agent {
-                // Using a Docker image with Maven installed
+                // Using a Docker image with Maven and OpenJDK installed
                 docker {
                     image 'maven:3.8.4-openjdk-11'
                     args '-v /root/.m2:/root/.m2' // Mounting the Maven local repository for caching
                 }
             }
             steps {
-                // Running Maven unit tests
+                // Running Maven unit tests and packaging the application
                 sh 'mvn clean package'
             }
         }
-    } // Correctly closing the 'stages' block
-} // Correctly closing the 'pipeline' block
+
+        stage('SonarQube analysis') {
+            agent {
+                docker {
+                    image 'sonarsource/sonar-scanner-cli:4.7.0' // Docker image for SonarQube Scanner CLI
+                }
+            }
+            environment {
+                CI = 'true'
+                scannerHome = '/opt/sonar-scanner' // Path to the SonarQube Scanner
+                SONARQUBE_AUTH_TOKEN = credentials('sonarqube-auth-token') // SonarQube authentication token
+            }
+            steps {
+                // Running SonarQube analysis
+                withSonarQubeEnv('Sonar') { // Using SonarQube environment configured in Jenkins
+                    sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=CI-CD-project \
+                        -Dsonar.projectName=CI-CD-project \
+                        -Dsonar.sources=src \
+                        -Dsonar.host.url=https://sonarqube.devopseasylearning.uk/ \
+                        -Dsonar.login=${SONARQUBE_AUTH_TOKEN}
+                    """
+                }
+            }
+        }
+    }
+}
