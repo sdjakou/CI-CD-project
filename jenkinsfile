@@ -1,0 +1,14 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Cloning Repo') {
+            steps {
+                // Use the `git` step to checkout the repository
+                git branch: 'main', 
+                    credentialsId: 'git-key-steph', 
+                    url: 'https://github.com/sdjakou/CI-CD-project'
+            }
+        }
+    }
+}
