@@ -38,7 +38,7 @@ pipeline {
             }
             steps {
                 // Running SonarQube analysis
-                withSonarQubeEnv('Sonar-Scanner') { // Ensure 'Sonar' matches the name in Jenkins configuration
+                withSonarQubeEnv('Sonar-Rudi') { // Ensure 'Sonar' matches the name in Jenkins configuration
                     sh """
                         ${scannerHome}/bin/sonar-scanner \
                         -Dsonar.projectKey=CI-CD-project \
